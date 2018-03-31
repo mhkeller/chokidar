@@ -456,6 +456,7 @@ FSWatcher.prototype._getWatchHelpers = function(path, depth) {
     return !unmatchedGlob && this._isntIgnored(entryPath(entry), entry.stat);
   }.bind(this);
 
+  // console.log('path vs watchPath', path, watchPath)
   return {
     followSymlinks: follow,
     statMethod: follow ? 'stat' : 'lstat',
@@ -478,6 +479,9 @@ FSWatcher.prototype._getWatchHelpers = function(path, depth) {
 //
 // Returns the directory's tracking object
 FSWatcher.prototype._getWatchedDir = function(directory) {
+  // if (directory.indexOf('*') > -1) {
+  //   console.log('aaaaaaaahbefore', this._watched)
+  // }
   var dir = sysPath.resolve(directory);
   var watcherRemove = this._remove.bind(this);
   if (!(dir in this._watched)) this._watched[dir] = {
@@ -496,6 +500,9 @@ FSWatcher.prototype._getWatchedDir = function(directory) {
     has: function(item) {return item in this._items;},
     children: function() {return Object.keys(this._items);}
   };
+  // if (directory.indexOf('*') > -1) {
+  //   console.log('aaaaaaaahafter', this._watched)
+  // }
   return this._watched[dir];
 };
 

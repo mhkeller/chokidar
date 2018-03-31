@@ -152,8 +152,9 @@ function runTests(baseopts) {
     });
   });
 
-  function stdWatcher() {
-    return watcher = chokidar.watch(fixturesPath, options);
+  function stdWatcher(extraPath) {
+    extraPath = extraPath || '';
+    return watcher = chokidar.watch(fixturesPath + extraPath, options);
   }
 
   function waitFor(spies, fn) {
@@ -1765,6 +1766,17 @@ function runTests(baseopts) {
       expected[sysPath.dirname(fixturesPath)] = [subdir.toString()];
       expected[fixturesPath] = ['change.txt', 'unlink.txt'];
       stdWatcher().on('ready', function() {
+        expect(watcher.getWatched()).to.deep.equal(expected);
+        done();
+      });
+    });
+    it('should return the watched paths with a glob', function(done) {
+      var expected = {};
+      // expected[sysPath.dirname(fixturesPath)] = [subdir.toString()];
+      expected[fixturesPath] = ['change.txt', 'unlink.txt'];
+      console.log('adsaexpected', expected)
+      stdWatcher('/**/*').on('ready', function() {
+        console.log('got watched', watcher.getWatched())
         expect(watcher.getWatched()).to.deep.equal(expected);
         done();
       });
